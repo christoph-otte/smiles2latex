@@ -1,0 +1,105 @@
+\documentclass{scrartcl}
+
+\usepackage{fontspec}
+% \setmainfont{Helvetica}
+% \setsansfont{Helvetica}
+
+\usepackage{mol2chemfig}
+
+\setchemfig{
+    % Abstände
+    atom sep=2em,
+    bond offset=2pt,
+    double bond sep=2pt,
+
+    % Bindungen
+    bond join=true,
+    bond style={
+        line width=0.6pt,
+        line cap=round,
+        line join=round
+    },
+
+    % Stereochemie
+    cram width=1.5ex,
+    cram dash width=0.7pt,
+    cram dash sep=2pt,
+
+    % Winkel
+    angle increment=45,
+
+    % Darstellung
+    bond style={line width=0.6pt}
+}
+
+\usepackage{caption}
+
+\title{Structural Formulas of Selected Molecules}
+\author{Christoph Otte}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{figure}[htbp]
+  \centering
+  \input{data/processed/caffeine.tex}
+  \caption{Caffeine (PubChem CID: 2519).}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \input{data/processed/ethanol.tex}
+  \caption{Ethanol (PubChem CID: 702).}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \input{data/processed/glucose.tex}
+  \caption{Glucose (PubChem CID: 5793).}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \input{data/processed/serotonin.tex}
+  \caption{Serotonin (PubChem CID: 5202).}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \input{data/processed/dopamine.tex}
+  \caption{Dopamine (PubChem CID: 681).}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \input{data/processed/acetylcholine.tex}
+  \caption{Acetylcholine (PubChem CID: 187).}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \input{data/processed/gaba.tex}
+  \caption{gamma-Aminobutyric acid (GABA) (PubChem CID: 119).}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \input{data/processed/glutamate.tex}
+  \caption{L-Glutamic acid (L-glutamate) (PubChem CID: 33032).}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \input{data/processed/norepinephrine.tex}
+  \caption{Norepinephrine (PubChem CID: 439260).}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \input{data/processed/histamine.tex}
+  \caption{Histamine (PubChem CID: 774).}
+\end{figure}
+
+\end{document}

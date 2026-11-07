@@ -1,0 +1,14 @@
+\ifdefined\svgexport
+  \def\pgfsysdriver{pgfsys-dvisvgm.def}
+\fi
+\documentclass[border=2pt]{standalone}
+
+\usepackage{fontspec}
+\setmainfont{Helvetica}
+\setsansfont{Helvetica}
+\usepackage{mol2chemfig}
+\setchemfig{atom sep=2em}
+
+\begin{document}
+\input{molecule.tex}
+\end{document}
