@@ -4,7 +4,6 @@ make.log
 __pycache__/
 *.pyc
 data/processed/
-report/*.pdf
 report/*.aux
 report/*.fdb_latexmk
 report/*.fls

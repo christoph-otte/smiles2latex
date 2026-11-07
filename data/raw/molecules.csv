@@ -1,7 +1,4 @@
 id,name,smiles,pubchem_cid
-caffeine,Caffeine,CN1C=NC2=C1C(=O)N(C(=O)N2C)C,2519
-ethanol,Ethanol,CCO,702
-glucose,Glucose,C(C1C(C(C(C(O1)O)O)O)O)O,5793
 serotonin,Serotonin,C1=CC2=C(C=C1O)C(=CN2)CCN,5202
 dopamine,Dopamine,C1=CC(=C(C=C1CCN)O)O,681
 acetylcholine,Acetylcholine,CC(=O)OCC[N+](C)(C)C,187
@@ -9,6 +6,3 @@ gaba,gamma-Aminobutyric acid (GABA),C(CC(=O)O)CN,119
 glutamate,L-Glutamic acid (L-glutamate),C(CC(=O)O)[C@@H](C(=O)O)N,33032
 norepinephrine,Norepinephrine,C1=CC(=C(C=C1[C@H](CN)O)O)O,439260
 histamine,Histamine,C1=C(NC=N1)CCN,774
-lamotrigine,Lamotrigine,C1=CC(=C(C(=C1)Cl)Cl)C2=C(N=C(N=N2)N)N,3877
-creatine,Creatine,CN(CC(=O)O)C(=N)N,586
-cocaine,Cocaine,CN1[C@H]2CC[C@@H]1[C@@H](C(OC)=O)[C@@H](OC(C3=CC=CC=C3)=O)C2,446220
