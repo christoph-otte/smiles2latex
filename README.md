@@ -47,7 +47,7 @@ Output:
 
 The generated ChemFig fragment can be used directly in a LaTeX document.
 
-You can find additional SMILES strings at [https://pubchem.ncbi.nlm.nih.gov/](https://pubchem.ncbi.nlm.nih.gov/).
+You can find additional SMILES strings at [https://pubchem.ncbi.nlm.nih.gov](https://pubchem.ncbi.nlm.nih.gov).
 
 ### Generate all molecular structures
 
@@ -65,14 +65,15 @@ This processes the molecules listed in the input CSV file `data/raw/molecules.cs
 | ------------- | ------------- |
 | `make`  | Generate molecular structures, graphics and the PDF report.  |
 | `make smiles SMILES='C1=C(NC=N1)CCN'`  | Convert one SMILES string and print its LaTeX fragment.  |
-| `make test'`  | Run the test suite.  |
-| `make clean'`  | Remove generated files and build artifacts.  |
+| `make test`  | Run the test suite.  |
+| `make clean`  | Remove generated files and build artifacts.  |
 
 Note: The single-SMILES command requires the `smiles` target and a `SMILES` variable.
 
 ## Output
 
-- `data/processed/`: Generated LaTeX fragments and individual PDF/SVG molecular structure diagrams.
+- `data/processed/tex/`: Generated LaTeX (ChemFig) fragments.
+- `data/processed/pdf/` and `data/processed/svg/`: Individual PDF/SVG molecular structure diagrams.
 - `report/report.pdf`: Compiled PDF report containing the molecular structures.
 - `report/main.tex`: Manually maintained LaTeX report template.
 - `make.log`: Detailed build and test log.

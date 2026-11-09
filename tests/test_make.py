@@ -10,7 +10,7 @@ class MakeTests(unittest.TestCase):
     def test_clean_removes_generated_files_and_caches(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            for name in ("scripts", "tests", "data/processed", "report"):
+            for name in ("scripts", "tests", "data/processed/pdf", "report"):
                 (root / name).mkdir(parents=True)
             (root / "Makefile").write_bytes((ROOT / "Makefile").read_bytes())
             (root / "scripts/run_logged.sh").write_bytes(
@@ -20,16 +20,16 @@ class MakeTests(unittest.TestCase):
                 cache = root / name / "__pycache__"
                 cache.mkdir()
                 (cache / "example.pyc").write_bytes(b"cache")
-            (root / "data/processed/example.pdf").write_bytes(b"pdf")
+            (root / "data/processed/pdf/example.pdf").write_bytes(b"pdf")
             (root / "report/report.pdf").write_bytes(b"pdf")
             subprocess.run(
                 ["make", "clean"], cwd=root, capture_output=True, text=True, check=True,
             )
             self.assertFalse((root / "scripts/__pycache__").exists())
             self.assertFalse((root / "tests/__pycache__").exists())
-            self.assertFalse((root / "data/processed/example.pdf").exists())
+            self.assertFalse((root / "data/processed/pdf/example.pdf").exists())
             self.assertFalse((root / "report/report.pdf").exists())
-            self.assertTrue((root / "make.log").exists())
+            self.assertFalse((root / "make.log").exists())
 
 
 if __name__ == "__main__":

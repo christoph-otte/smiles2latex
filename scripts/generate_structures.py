@@ -57,16 +57,17 @@ def generate(molecules: list[dict[str, str]], output: Path) -> int:
     failed = 0
     for molecule in molecules:
         molecule_id = molecule["id"]
-        target = output / f"{molecule_id}.tex"
+        target = output / "tex" / f"{molecule_id}.tex"
         print(f"[MOLECULE] {molecule['name']}", flush=True)
         try:
             result = convert_smiles(molecule["smiles"])
         except ValueError as error:
             print(f"ERROR: {molecule_id}: {error}", file=sys.stderr)
-            for suffix in (".tex", ".pdf", ".svg"):
-                target.with_suffix(suffix).unlink(missing_ok=True)
+            for subdir, suffix in (("tex", ".tex"), ("pdf", ".pdf"), ("svg", ".svg")):
+                (output / subdir / f"{molecule_id}{suffix}").unlink(missing_ok=True)
             failed += 1
             continue
+        target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(result + "\n", encoding="utf-8")
         print(f"OK: {molecule_id}")
     print(f"SUCCESS: {len(molecules) - failed}; ERROR: {failed}")

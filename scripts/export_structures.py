@@ -11,9 +11,9 @@ from generate_structures import PROCESSED_DIR, RAW_DIR, REPORT_DIR, read_molecul
 
 
 def export_structure(molecule_id: str, output: Path) -> None:
-    fragment = output / f"{molecule_id}.tex"
-    for suffix in (".pdf", ".svg"):
-        fragment.with_suffix(suffix).unlink(missing_ok=True)
+    fragment = output / "tex" / f"{molecule_id}.tex"
+    for subdir, suffix in (("pdf", ".pdf"), ("svg", ".svg")):
+        (output / subdir / f"{molecule_id}{suffix}").unlink(missing_ok=True)
     env = os.environ.copy()
     env["TEXINPUTS"] = f"{REPORT_DIR / 'vendor'}//:{env.get('TEXINPUTS', '')}"
     with tempfile.TemporaryDirectory() as directory:
@@ -47,8 +47,10 @@ def export_structure(molecule_id: str, output: Path) -> None:
             cwd=temporary,
             check=True,
         )
-        for graphic in (pdf, svg):
-            shutil.copyfile(graphic, output / graphic.name)
+        for subdir, graphic in (("pdf", pdf), ("svg", svg)):
+            destination = output / subdir / graphic.name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(graphic, destination)
     print(f"EXPORT: {molecule_id}.pdf und {molecule_id}.svg")
 
 

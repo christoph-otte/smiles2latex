@@ -52,16 +52,16 @@ class GenerationTests(unittest.TestCase):
             output = Path(directory)
             for result in (None, "", "Failed to parse SMILES", "Invalid input data"):
                 with self.subTest(result=result):
-                    (output / "ethanol.tex").write_text("stale")
-                    (output / "ethanol.pdf").write_text("stale")
-                    (output / "ethanol.svg").write_text("stale")
+                    for subdir, suffix in (("tex", ".tex"), ("pdf", ".pdf"), ("svg", ".svg")):
+                        (output / subdir).mkdir(exist_ok=True)
+                        (output / subdir / f"ethanol{suffix}").write_text("stale")
                     with patch.object(structures, "mol2chemfig", return_value=result):
                         with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
                             self.assertEqual(structures.generate(rows, output), 1)
-                    self.assertFalse((output / "ethanol.tex").exists())
-                    self.assertFalse((output / "ethanol.pdf").exists())
-                    self.assertFalse((output / "ethanol.svg").exists())
-                    self.assertFalse((output / "index.tex").exists())
+                    self.assertFalse((output / "tex" / "ethanol.tex").exists())
+                    self.assertFalse((output / "pdf" / "ethanol.pdf").exists())
+                    self.assertFalse((output / "svg" / "ethanol.svg").exists())
+                    self.assertFalse((output / "tex" / "index.tex").exists())
 
     def test_real_converter(self) -> None:
         rows = structures.read_molecules(ROOT / "tests/fixtures/molecules.csv")
@@ -75,9 +75,9 @@ class GenerationTests(unittest.TestCase):
             output = Path(directory)
             with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
                 self.assertEqual(structures.generate(rows, output), 1)
-            self.assertIn(r"\chemfig{", (output / "ethanol.tex").read_text())
-            self.assertFalse((output / "invalid.tex").exists())
-            self.assertFalse((output / "index.tex").exists())
+            self.assertIn(r"\chemfig{", (output / "tex" / "ethanol.tex").read_text())
+            self.assertFalse((output / "tex" / "invalid.tex").exists())
+            self.assertFalse((output / "tex" / "index.tex").exists())
 
     def test_main_missing_input_returns_error(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

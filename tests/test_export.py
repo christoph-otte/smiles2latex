@@ -17,7 +17,8 @@ class ExportTests(unittest.TestCase):
     def test_export_commands_and_outputs(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory)
-            (output / "ethanol.tex").write_text(r"\chemfig{C-C-OH}")
+            (output / "tex").mkdir()
+            (output / "tex" / "ethanol.tex").write_text(r"\chemfig{C-C-OH}")
 
             def run(command: list[str], **kwargs: object) -> None:
                 working = Path(str(kwargs["cwd"]))
@@ -38,25 +39,29 @@ class ExportTests(unittest.TestCase):
                 with contextlib.redirect_stdout(io.StringIO()):
                     exporter.export_structure("ethanol", output)
             self.assertEqual(runner.call_count, 3)
-            self.assertEqual((output / "ethanol.pdf").read_bytes(), b"%PDF-test")
-            self.assertEqual((output / "ethanol.svg").read_text(), "<svg/>")
-            self.assertEqual(len(list(output.iterdir())), 3)
+            self.assertEqual((output / "pdf" / "ethanol.pdf").read_bytes(), b"%PDF-test")
+            self.assertEqual((output / "svg" / "ethanol.svg").read_text(), "<svg/>")
+            self.assertEqual(sorted(entry.name for entry in output.iterdir()), ["pdf", "svg", "tex"])
+            for subdir in ("tex", "pdf", "svg"):
+                self.assertEqual(len(list((output / subdir).iterdir())), 1)
 
     def test_command_failure_returns_error_and_removes_stale_graphics(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory)
-            for suffix in (".pdf", ".svg"):
-                (output / f"ethanol{suffix}").write_text("stale")
+            for subdir, suffix in (("pdf", ".pdf"), ("svg", ".svg")):
+                (output / subdir).mkdir()
+                (output / subdir / f"ethanol{suffix}").write_text("stale")
             with patch.object(exporter, "PROCESSED_DIR", output):
                 with patch.object(exporter, "read_molecules", return_value=[{"id": "ethanol", "name": "Ethanol"}]):
                     with patch.object(exporter.subprocess, "run", side_effect=subprocess.CalledProcessError(1, "xelatex")):
-                        (output / "ethanol.tex").write_text(r"\chemfig{C-C-OH}")
+                        (output / "tex").mkdir()
+                        (output / "tex" / "ethanol.tex").write_text(r"\chemfig{C-C-OH}")
                         with patch.object(sys, "argv", ["export_structures.py"]), contextlib.redirect_stderr(io.StringIO()) as errors:
                             self.assertEqual(exporter.main(), 1)
             self.assertIn("ERROR during export:", errors.getvalue())
             self.assertIn("xelatex", errors.getvalue())
-            self.assertFalse((output / "ethanol.pdf").exists())
-            self.assertFalse((output / "ethanol.svg").exists())
+            self.assertFalse((output / "pdf" / "ethanol.pdf").exists())
+            self.assertFalse((output / "svg" / "ethanol.svg").exists())
 
 
 if __name__ == "__main__":
