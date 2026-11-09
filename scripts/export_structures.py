@@ -1,3 +1,5 @@
+"""Export structures of neurotransmitters to LaTeX and generate PDF/SVG."""
+
 import os
 import shutil
 import subprocess

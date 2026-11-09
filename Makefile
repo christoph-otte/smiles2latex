@@ -7,7 +7,7 @@ TEX_AUX = report/report.aux report/report.fdb_latexmk report/report.fls \
 	report/report.log report/report.out report/report.toc \
 	report/report.synctex.gz report/report.xdv
 
-.PHONY: all venv structures graphics pdf test clean
+.PHONY: all venv smiles structures graphics pdf test clean
 
 all: pdf
 
@@ -17,6 +17,10 @@ $(VENV)/.ready: requirements.txt Makefile scripts/run_logged.sh
 	@$(RUN) "Virtual Environment" $(PYTHON) -m venv $(VENV)
 	@$(RUN) "Python Packages" $(VENV_PYTHON) -m pip install -r requirements.txt
 	@touch $@
+
+smiles: venv
+	@test -n "$(SMILES)" || { echo "Usage: make smiles SMILES='...'" >&2; exit 2; }
+	@$(VENV_PYTHON) scripts/generate_structures.py --smiles "$(SMILES)"
 
 structures: venv
 	@$(RUN) "Structural Formulas" $(VENV_PYTHON) scripts/generate_structures.py

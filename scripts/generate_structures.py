@@ -1,6 +1,10 @@
+"""Generate LaTeX structures of neurotransmitters from SMILES."""
+
+import argparse
 import csv
 import sys
 from pathlib import Path
+from typing import Optional
 
 from mol2chemfigPy3 import mol2chemfig
 
@@ -11,7 +15,16 @@ REPORT_DIR = ROOT / "report"
 REQUIRED_COLUMNS = ("id", "name", "smiles", "pubchem_cid")
 
 
+def convert_smiles(smiles: str) -> str:
+    """Convert one SMILES string to a LaTeX chemfig expression."""
+    result = mol2chemfig(smiles, aromatic=False, inline=True)
+    if result is None or not result.lstrip().startswith(r"\chemfig{"):
+        raise ValueError(f"Could not convert SMILES: {result}")
+    return result
+
+
 def read_molecules(path: Path) -> list[dict[str, str]]:
+    """Read molecules from a CSV file and validate required columns."""
     with path.open(newline="", encoding="utf-8-sig") as file:
         reader = csv.DictReader(file)
         if not reader.fieldnames or any(column not in reader.fieldnames for column in REQUIRED_COLUMNS):
@@ -39,15 +52,17 @@ def read_molecules(path: Path) -> list[dict[str, str]]:
 
 
 def generate(molecules: list[dict[str, str]], output: Path) -> int:
+    """Generate LaTeX structures for the given molecules and save them to the output directory."""
     output.mkdir(parents=True, exist_ok=True)
     failed = 0
     for molecule in molecules:
         molecule_id = molecule["id"]
         target = output / f"{molecule_id}.tex"
         print(f"[MOLECULE] {molecule['name']}", flush=True)
-        result = mol2chemfig(molecule["smiles"], aromatic=False, inline=True)
-        if result is None or not result.lstrip().startswith(r"\chemfig{"):
-            print(f"ERROR: {molecule_id}: {result}", file=sys.stderr)
+        try:
+            result = convert_smiles(molecule["smiles"])
+        except ValueError as error:
+            print(f"ERROR: {molecule_id}: {error}", file=sys.stderr)
             for suffix in (".tex", ".pdf", ".svg"):
                 target.with_suffix(suffix).unlink(missing_ok=True)
             failed += 1
@@ -58,7 +73,18 @@ def generate(molecules: list[dict[str, str]], output: Path) -> int:
     return 1 if failed else 0
 
 
-def main() -> int:
+def main(argv: Optional[list[str]] = None) -> int:
+    parser = argparse.ArgumentParser(description="Generate LaTeX structures from SMILES.")
+    parser.add_argument("--smiles", help="convert one SMILES string and print its LaTeX")
+    args = parser.parse_args(argv)
+    if args.smiles is not None:
+        try:
+            print(convert_smiles(args.smiles))
+        except ValueError as error:
+            print(f"ERROR: {error}", file=sys.stderr)
+            return 1
+        return 0
+
     try:
         molecules = read_molecules(RAW_DIR / "molecules.csv")
         return generate(molecules, PROCESSED_DIR)

@@ -27,8 +27,11 @@ The Makefile automatically creates a Python virtual environment and installs the
 ## Available Commands 
 
 - `make`: Generate molecular structures, graphics and the PDF report.
+- `make smiles SMILES='C1=C(NC=N1)CCN'`: Convert one SMILES string and print its LaTeX fragment.
 - `make test`: Run the test suite.
 - `make clean`: Remove generated files and build artifacts.
+
+The single-SMILES command requires the `smiles` target and a `SMILES` variable. You can find more SMILES strings at [https://pubchem.ncbi.nlm.nih.gov/](https://pubchem.ncbi.nlm.nih.gov/).
 
 ## Output
 

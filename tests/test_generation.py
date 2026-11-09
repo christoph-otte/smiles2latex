@@ -13,6 +13,19 @@ import generate_structures as structures
 
 
 class GenerationTests(unittest.TestCase):
+    def test_convert_smiles(self) -> None:
+        with patch.object(structures, "mol2chemfig", return_value=r"\chemfig{C}"):
+            self.assertEqual(structures.convert_smiles("C"), r"\chemfig{C}")
+        with patch.object(structures, "mol2chemfig", return_value="invalid"):
+            with self.assertRaisesRegex(ValueError, "Could not convert SMILES"):
+                structures.convert_smiles("invalid")
+
+    def test_main_prints_single_smiles_latex(self) -> None:
+        with patch.object(structures, "convert_smiles", return_value=r"\chemfig{C}"):
+            with contextlib.redirect_stdout(io.StringIO()) as output:
+                self.assertEqual(structures.main(["--smiles", "C"]), 0)
+        self.assertEqual(output.getvalue(), r"\chemfig{C}" + "\n")
+
     def test_invalid_csv(self) -> None:
         samples = (
             "",
@@ -70,7 +83,7 @@ class GenerationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             with patch.object(structures, "RAW_DIR", Path(directory)):
                 with contextlib.redirect_stderr(io.StringIO()) as errors:
-                    self.assertEqual(structures.main(), 1)
+                    self.assertEqual(structures.main([]), 1)
             self.assertIn("ERROR:", errors.getvalue())
             self.assertIn("molecules.csv", errors.getvalue())
 
