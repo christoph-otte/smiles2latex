@@ -2,7 +2,9 @@
 
 This project converts SMILES strings into molecular structure diagrams using LaTeX. A CSV file containing molecular metadata serves as input. The program generates LaTeX fragments, individual PDF and SVG graphics, and a consolidated PDF report for manual review and curation.
 
-![](assets/caffeine.svg)
+<p align="center">
+  <img src="assets/caffeine.svg" width="350" alt="Chemical structure of caffeine">
+</p>
 
 ## Requirements
 
@@ -26,14 +28,47 @@ The Makefile automatically creates a Python virtual environment and installs the
 - Each row represents one molecule.
 - The `id` column must contain unique identifiers.
 
-## Available Commands 
+## Usage
 
-- `make`: Generate molecular structures, graphics and the PDF report.
-- `make smiles SMILES='C1=C(NC=N1)CCN'`: Convert one SMILES string and print its LaTeX fragment.
-- `make test`: Run the test suite.
-- `make clean`: Remove generated files and build artifacts.
+### Convert a single SMILES string 
 
-The single-SMILES command requires the `smiles` target and a `SMILES` variable. You can find more SMILES strings at [https://pubchem.ncbi.nlm.nih.gov/](https://pubchem.ncbi.nlm.nih.gov/).
+A single SMILES string can also be converted directly from the command line:
+
+```bash
+make smiles SMILES='C1=C(NC=N1)CCN'
+```
+
+Output:
+
+```bash
+\chemfig{NH_2-[:174,,1]-[:234]-[:174]=^[:120]-[:192]N=^[:264]%
+-[:336]\mcfbelow{N}{H}(-[:48])}
+```
+
+The generated ChemFig fragment can be used directly in a LaTeX document.
+
+You can find additional SMILES strings at [https://pubchem.ncbi.nlm.nih.gov/](https://pubchem.ncbi.nlm.nih.gov/).
+
+### Generate all molecular structures
+
+Run:
+
+```bash
+make
+```
+
+This processes the molecules listed in the input CSV file `data/raw/molecules.csv`, generates the corresponding graphics and compiles the PDF report.
+
+### Available Commands
+
+| Command  | Description |
+| ------------- | ------------- |
+| `make`  | Generate molecular structures, graphics and the PDF report.  |
+| `make smiles SMILES='C1=C(NC=N1)CCN'`  | Convert one SMILES string and print its LaTeX fragment.  |
+| `make test'`  | Run the test suite.  |
+| `make clean'`  | Remove generated files and build artifacts.  |
+
+Note: The single-SMILES command requires the `smiles` target and a `SMILES` variable.
 
 ## Output
 
@@ -47,3 +82,9 @@ The single-SMILES command requires the `smiles` target and a `SMILES` variable. 
 This project is licensed under the MIT License. See [LICENSE](LICENSE).
 
 The bundled `mol2chemfig.sty` is a third-party dependency. See [its documentation](report/vendor/README.md) for source and licensing information.
+
+## Feedback and Contact
+
+Questions, comments, and suggestions are very welcome!
+
+Feel free to drop me an email at: otte@ub.uni-heidelberg.de
