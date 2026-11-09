@@ -2,6 +2,8 @@
 
 This project converts SMILES strings into molecular structure diagrams using LaTeX. A CSV file containing molecular metadata serves as input. The program generates LaTeX fragments, individual PDF and SVG graphics, and a consolidated PDF report for manual review and curation.
 
+![](assets/caffeine.svg)
+
 ## Requirements
 
 - Python: 3.10 or later, including venv and pip
